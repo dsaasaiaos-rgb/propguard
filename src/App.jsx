@@ -1,11 +1,16 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import MainApp from './pages/MainApp';
+import { Toaster } from "@/components/ui/toaster";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClientInstance } from "@/lib/query-client";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import PageNotFound from "./lib/PageNotFound";
+import { AuthProvider, useAuth } from "@/lib/AuthContext";
+import UserNotRegisteredError from "@/components/UserNotRegisteredError";
+import Layout from "./components/Layout";
+import Dashboard from "./pages/Dashboard";
+import Houses from "./pages/Houses";
+import Tenants from "./pages/Tenants";
+import Documents from "./pages/Documents";
+import MainApp from "./pages/MainApp";
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -19,18 +24,21 @@ const AuthenticatedApp = () => {
   }
 
   if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
-    }
+    if (authError.type === "user_not_registered") return <UserNotRegisteredError />;
+    if (authError.type === "auth_required") { navigateToLogin(); return null; }
   }
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/MainApp" replace />} />
-      <Route path="/MainApp" element={<MainApp />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/MainApp" element={<Navigate to="/dashboard" replace />} />
+      <Route element={<Layout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/houses" element={<Houses />} />
+        <Route path="/tenants" element={<Tenants />} />
+        <Route path="/documents" element={<Documents />} />
+        <Route path="/guide" element={<MainApp />} />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
