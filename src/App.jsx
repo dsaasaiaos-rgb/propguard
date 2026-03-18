@@ -29,8 +29,8 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/guide" replace />} />
-      <Route path="/guide" element={<MainApp />} />
+      <Route path="/" element={<Navigate to="/MainApp" replace />} />
+      <Route path="/MainApp" element={<MainApp />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
